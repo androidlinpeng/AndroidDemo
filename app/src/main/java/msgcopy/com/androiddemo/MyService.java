@@ -31,7 +31,6 @@ public class MyService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.i(TAG,"onBind");
-
         //接收通过意图传来的值
         Bundle bundle = intent.getBundleExtra("bundle");
         if (null != bundle) {
@@ -85,11 +84,6 @@ public class MyService extends Service {
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         Log.i(TAG,"onStart");
-//        Bundle bundle = intent.getBundleExtra("bundle");
-//        if (null != bundle) {
-//            String msg = bundle.getString("msgService");
-//            Toast.makeText(this, "msgService:" + msg, Toast.LENGTH_SHORT).show();
-//        }
     }
 
 

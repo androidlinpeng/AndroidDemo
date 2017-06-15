@@ -1,11 +1,37 @@
 <resources>
 
+    <!--&lt;!&ndash; Base application theme. &ndash;&gt;-->
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+    <!--</style>-->
+
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="vpiTabPageIndicatorStyle">@style/LimbTabPageIndicatorStyle</item>
+        <item name="android:windowBackground">@color/bg_activity_base</item>
+        <item name="android:colorBackground">@color/bg_activity_base</item>
+        <item name="android:windowIsTranslucent">true</item>
+
+        <!--API 21-->
+        <item name="colorPrimaryDark">@android:color/black</item>
+    </style>
+
+    <style name="LimbTabPageIndicatorStyle">
+        <item name="android:textColor">@color/limb_tap_page_idicator_text_color</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:ellipsize">middle</item>
+        <!-- <item name="android:maxLength">5</item> -->
+        <!--<item name="android:textStyle">bold</item>-->
+        <item name="android:maxLines">1</item>
     </style>
 
 </resources>
