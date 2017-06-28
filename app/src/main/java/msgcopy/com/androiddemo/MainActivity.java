@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import msgcopy.com.androiddemo.msgpolling.MsgPollingActivity;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     @Override
@@ -31,6 +33,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.snackbar:
                 startActivity(new Intent(MainActivity.this,SnackbarActivity.class));
+                break;
+            case R.id.listView:
+                startActivity(new Intent(MainActivity.this,CustomRefreshListActivity.class));
+                break;
+            case R.id.polling:
+                startActivity(new Intent(MainActivity.this,MsgPollingActivity.class));
                 break;
         }
     }
