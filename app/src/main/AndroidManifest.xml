@@ -41,8 +41,8 @@
         <activity android:name=".PermissionActivity" />
         <activity android:name=".SnackbarActivity" />
         <activity android:name=".CustomRefreshListActivity" />
-        <activity android:name=".msgpolling.MsgPollingActivity"></activity>
-
+        <activity android:name=".msgpolling.MsgPollingActivity" />
+        <activity android:name=".msgpolling.EventBusActivity"></activity>
     </application>
 
 </manifest>

@@ -34,4 +34,14 @@
         android:onClick="startService"
         android:text="开始服务" />
 
+    <Button
+        android:id="@+id/eventBus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:onClick="onClick"
+        android:text="EventBus" />
+
 </RelativeLayout>

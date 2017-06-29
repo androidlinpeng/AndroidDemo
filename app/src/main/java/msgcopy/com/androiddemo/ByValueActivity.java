@@ -16,6 +16,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import msgcopy.com.androiddemo.msgpolling.EventBusActivity;
+
 public class ByValueActivity extends AppCompatActivity implements ServiceConnection {
 
     private static final String TAG = "ByValueActivity";
@@ -41,6 +47,8 @@ public class ByValueActivity extends AppCompatActivity implements ServiceConnect
 
         mTv = (TextView) findViewById(R.id.mTv);
 
+        EventBus.getDefault().register(this);
+
         receiver = new ByvalueReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("broadcast_send_success");
@@ -56,7 +64,7 @@ public class ByValueActivity extends AppCompatActivity implements ServiceConnect
         myService.setCallbask(new MyService.MyCallback() {
             @Override
             public void onDataChange(String data) {
-                Log.i(TAG,"onServiceConnected"+data);
+                Log.i(TAG, "onServiceConnected" + data);
                 Message msg = new Message();
                 msg.obj = data;
                 mHandler.sendMessage(msg);
@@ -79,7 +87,7 @@ public class ByValueActivity extends AppCompatActivity implements ServiceConnect
      */
     public void startService(View v) {
 
-        Log.i("onStart","----");
+        Log.i("onStart", "----");
         Intent intentService = new Intent(ByValueActivity.this, MyService.class);
         Bundle bundle = new Bundle();
         bundle.putString("msgService", "服务接受到消息");
@@ -94,6 +102,40 @@ public class ByValueActivity extends AppCompatActivity implements ServiceConnect
 
     }
 
+    /**
+     * NAIN UI主线程
+     * BACKGROUND 后台线程
+     *POSTING 和发布者处在同一个线程
+     *ASYNC 异步线程
+     *
+     * @param myEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(MyEvent myEvent) {
+        mTv.setText("onEventMainThread:" + myEvent.getMsg());
+    }
+
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void onEventPostThread(MyEvent myEvent) {
+        mTv.setText("onEventPostThread:" + myEvent.getMsg());
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onEventBackgroundThread(MyEvent myEvent) {
+        mTv.setText("onEventBackgroundThread:" + myEvent.getMsg());
+    }
+
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    public void onEventAsync(MyEventAsync myEventAsync) {
+        mTv.setText("onEventAsync:" + myEventAsync.getMsg());
+        Log.i(TAG,"onEventAsync:" + myEventAsync.getMsg());
+    }
+
+    @Subscribe
+    public void onEvent(MyEvent myEvent) {
+        mTv.setText("onEvent:" + myEvent.getMsg());
+        Log.i(TAG,"onEvent:" + myEvent.getMsg());
+    }
 
 
     public class ByvalueReceiver extends BroadcastReceiver {
@@ -127,12 +169,19 @@ public class ByValueActivity extends AppCompatActivity implements ServiceConnect
     }
 
     public void onClick(View v) {
-        Intent intent = new Intent(ByValueActivity.this, Main2Activity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("sendData", "mainsend:哈喽");
-        intent.putExtras(bundle);
-        // 请求码的值随便设置，但必须>=0
-        startActivityForResult(intent, REQUEST_REG);
+        switch (v.getId()) {
+            case R.id.button:
+                Intent intent = new Intent(ByValueActivity.this, Main2Activity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("sendData", "mainsend:哈喽");
+                intent.putExtras(bundle);
+                // 请求码的值随便设置，但必须>=0
+                startActivityForResult(intent, REQUEST_REG);
+                break;
+            case R.id.eventBus:
+                startActivity(new Intent(this, EventBusActivity.class));
+                break;
+        }
     }
 
     @Override
@@ -140,6 +189,8 @@ public class ByValueActivity extends AppCompatActivity implements ServiceConnect
         super.onDestroy();
 //        unbindService(this);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(this.receiver);
+
+        EventBus.getDefault().unregister(this);
     }
 }
 
