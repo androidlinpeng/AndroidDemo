@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import msgcopy.com.androiddemo.msgpolling.MsgPollingActivity;
+import msgcopy.com.androiddemo.network.DownLoadActivity;
+import msgcopy.com.androiddemo.observer.ObserverModeActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -39,6 +41,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.polling:
                 startActivity(new Intent(MainActivity.this,MsgPollingActivity.class));
+                break;
+            case R.id.observer:
+                startActivity(new Intent(MainActivity.this,ObserverModeActivity.class));
+                break;
+            case R.id.threadpool:
+                startActivity(new Intent(MainActivity.this,ThreadPoolExecutorActivity.class));
+                break;
+            case R.id.download:
+                startActivity(new Intent(MainActivity.this,DownLoadActivity.class));
                 break;
         }
     }
