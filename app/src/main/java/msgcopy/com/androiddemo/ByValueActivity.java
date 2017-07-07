@@ -20,6 +20,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.ref.WeakReference;
+
 import msgcopy.com.androiddemo.msgpolling.EventBusActivity;
 
 public class ByValueActivity extends AppCompatActivity implements ServiceConnection {
@@ -32,13 +34,30 @@ public class ByValueActivity extends AppCompatActivity implements ServiceConnect
 
     private ByvalueReceiver receiver;
 
-    private Handler mHandler = new Handler() {
+    private MyHandler mHandler;
+
+    //    private Handler mHandler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//            mTv.setText("Service:" + msg.obj.toString());
+//        }
+//    };
+    private static class MyHandler extends Handler {
+
+        //防止内存泄露 弱引用
+        private final WeakReference<ByValueActivity> mActivity;
+
+        public MyHandler(ByValueActivity activity) {
+            this.mActivity = new WeakReference<ByValueActivity>(activity);
+        }
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            mTv.setText("Service:" + msg.obj.toString());
+            mActivity.get().mTv.setText("Service:" + msg.obj.toString());
         }
-    };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +67,8 @@ public class ByValueActivity extends AppCompatActivity implements ServiceConnect
         mTv = (TextView) findViewById(R.id.mTv);
 
         EventBus.getDefault().register(this);
+
+        mHandler = new MyHandler(this);
 
         receiver = new ByvalueReceiver();
         IntentFilter filter = new IntentFilter();
@@ -105,8 +126,8 @@ public class ByValueActivity extends AppCompatActivity implements ServiceConnect
     /**
      * NAIN UI主线程
      * BACKGROUND 后台线程
-     *POSTING 和发布者处在同一个线程
-     *ASYNC 异步线程
+     * POSTING 和发布者处在同一个线程
+     * ASYNC 异步线程
      *
      * @param myEvent
      */
@@ -128,13 +149,13 @@ public class ByValueActivity extends AppCompatActivity implements ServiceConnect
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onEventAsync(MyEventAsync myEventAsync) {
         mTv.setText("onEventAsync:" + myEventAsync.getMsg());
-        Log.i(TAG,"onEventAsync:" + myEventAsync.getMsg());
+        Log.i(TAG, "onEventAsync:" + myEventAsync.getMsg());
     }
 
     @Subscribe
     public void onEvent(MyEvent myEvent) {
         mTv.setText("onEvent:" + myEvent.getMsg());
-        Log.i(TAG,"onEvent:" + myEvent.getMsg());
+        Log.i(TAG, "onEvent:" + myEvent.getMsg());
     }
 
 

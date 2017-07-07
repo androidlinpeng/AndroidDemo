@@ -1,29 +1,52 @@
 package msgcopy.com.androiddemo.observer;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+
+import java.util.Observable;
+import java.util.Observer;
 
 import msgcopy.com.androiddemo.R;
 
-public class ObserverModeActivity extends AppCompatActivity {
+public class ObserverModeActivity extends AppCompatActivity implements Observer,View.OnClickListener{
+
+    private static final String TAG = "ObserverModeActivity";
+    private CreateSubject subject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_observer_mode);
 
-        CreateSubject subject = new CreateSubject();
+        subject = CreateSubject.getInstence();
+        //订阅
+        subject.addObserver(this);
 
-        CreateObserver observer1 = new CreateObserver();
-        observer1.setObserverName("小米");
+    }
 
-        CreateObserver observer2 = new CreateObserver();
-        observer2.setObserverName("华为");
+    @Override
+    public void update(Observable observable, Object o) {
+        //第一种推的方式
+        Log.i(TAG,"update：消息来了--"+o);
+        //第二种拉的模式
+        Log.i(TAG,"update：新消息来了--"+((CreateSubject)observable).getContent());
+    }
 
-        subject.addObserver(observer1);
-        subject.addObserver(observer2);
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.update:
+                subject.setContent("手机商家");
+                break;
+        }
+    }
 
-        subject.notifyObservers("手机商家");
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //取消订阅
+        subject.deleteObserver(this);
     }
 }

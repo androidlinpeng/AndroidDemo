@@ -15,7 +15,11 @@ public class CreateObserver implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        Log.i("update",observerName+"--"+(String)o);
+        //第一种推的方式
+        Log.i("update",observerName+"：消息来了--"+o);
+        //第二种辣的模式
+        Log.i("update",observerName+"：新消息来了--"+((CreateSubject)observable).getContent());
+
     }
 
     public String getObserverName() {

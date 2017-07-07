@@ -1,9 +1,6 @@
 package msgcopy.com.androiddemo.observer;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Created by liang on 2017/7/3.
@@ -11,26 +8,25 @@ import java.util.Observer;
 
 public class CreateSubject extends Observable {
 
-    private List<Observer> observers = new ArrayList<Observer>();
+    private String content ;
 
-    @Override
-    public synchronized void addObserver(Observer o) {
-        super.addObserver(o);
-        this.observers.add(o);
+    private static CreateSubject mInstence = new CreateSubject();
+
+    public static CreateSubject getInstence(){
+        return mInstence;
     }
 
-    @Override
-    public synchronized void deleteObserver(Observer o) {
-        super.deleteObserver(o);
-        this.observers.remove(o);
+    public String getContent() {
+        return content;
     }
 
-    @Override
-    public void notifyObservers(Object arg) {
-        super.notifyObservers(arg);
-        for (Observer observer : observers) {
-            setChanged();
-            notifyObservers(arg);
-        }
+    public void setContent(String content) {
+        this.content = content;
+        //用java提供的Observer模式是，这句话不可少
+        this.setChanged();
+        //直接把该类传过去
+//        this.notifyObservers(this);
+        //直接把content传过去
+        this.notifyObservers(content);
     }
 }
