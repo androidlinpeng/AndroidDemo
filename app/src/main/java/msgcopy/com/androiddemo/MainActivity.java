@@ -27,9 +27,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.byValue:
                 startActivity(new Intent(MainActivity.this,ByValueActivity.class));
                 break;
-            case R.id.limb:
-                startActivity(new Intent(MainActivity.this,LimbActivity.class));
-                break;
             case R.id.permission:
                 startActivity(new Intent(MainActivity.this,PermissionActivity.class));
                 break;

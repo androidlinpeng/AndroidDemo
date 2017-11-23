@@ -2,7 +2,10 @@ package msgcopy.com.androiddemo.network;
 
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -10,8 +13,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.TextView;
+
+import com.daimajia.numberprogressbar.NumberProgressBar;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -28,6 +35,8 @@ import java.util.zip.ZipInputStream;
 
 import msgcopy.com.androiddemo.MyApplication;
 import msgcopy.com.androiddemo.R;
+import msgcopy.com.androiddemo.download.DownloadService;
+import msgcopy.com.androiddemo.download.FileInfo;
 
 public class DownLoadActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -36,11 +45,31 @@ public class DownLoadActivity extends AppCompatActivity implements View.OnClickL
     private String jinritoutiao = "http://gdown.baidu.com/data/wisegame/55dc62995fe9ba82/jinritoutiao_448.apk";
     private String pathZip = "http://cloud9.kaoke.me/smedia/app/sda1/pubtmp/sys/2015/01/zhuanti_12.zip";
     private String pathBitmap = "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png";
+    private String QQurl = "http://gdown.baidu.com/data/wisegame/f28ba370126f3605/QQ_744.apk";
+
     private ProgressDialog mDialog;
+
 
     // 模板文件夹路径
     private static String TEMPLATE_DIR = Environment.getExternalStorageDirectory() + File.separator + "Download" + File.separator + "Template" + File.separator;
+    private String fileName = "";
+    private NumberProgressBar progressBar;
+    private View ll;
+    private TextView start;
+    private TextView stop;
+    private FileInfo fileInfo;
 
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(DownloadService.ACTION_UPDATE.equals(action)){
+                long finished = intent.getIntExtra("finished", 0);
+                long length = intent.getIntExtra("length", 0);
+                progressBar.setProgress((int) (finished*100/length));
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +81,23 @@ public class DownLoadActivity extends AppCompatActivity implements View.OnClickL
         mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mDialog.setCancelable(false);
 
+        ll = findViewById(R.id.ll);
+        start = (TextView) findViewById(R.id.start);
+        stop = (TextView) findViewById(R.id.stop);
+        progressBar = (NumberProgressBar) findViewById(R.id.progress);
+        progressBar.setMax(100);
+        start.setOnClickListener(this);
+        stop.setOnClickListener(this);
+        fileName = QQurl.substring(QQurl.lastIndexOf("/") + 1);
+        fileInfo = new FileInfo(0,QQurl,fileName,0,0);
+        IntentFilter filter = new IntentFilter(DownloadService.ACTION_UPDATE);
+        registerReceiver(receiver, filter);
 
     }
 
     @Override
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.button3:
                 Uri uri = Uri.parse(jinritoutiao);
@@ -81,8 +122,24 @@ public class DownLoadActivity extends AppCompatActivity implements View.OnClickL
             case R.id.button6:
                 new MyAsyncTask(TASK_BITMAP).execute();
                 break;
+            case R.id.button2:
+                ll.setVisibility(View.VISIBLE);
+                break;
+            case R.id.start:
+                Log.d(TAG, "onClick: start");
+                intent = new Intent(this,DownloadService.class);
+                intent.setAction(DownloadService.ACTION_START);
+                intent.putExtra("fileinfo",fileInfo);
+                startService(intent);
+                break;
+            case R.id.stop:
+                intent = new Intent(this,DownloadService.class);
+                intent.setAction(DownloadService.ACTION_STOP);
+                startService(intent);
+                break;
         }
     }
+
 
     private static final int TASK_PROGRESS = 1;
     private static final int TASK_ZIP = 2;
@@ -278,7 +335,6 @@ public class DownLoadActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-
     public File getFilePath(String name) {
         File file = new File(Environment.getExternalStorageDirectory() + "/Download/" + name);
         try {
@@ -296,4 +352,13 @@ public class DownLoadActivity extends AppCompatActivity implements View.OnClickL
         }
         return file;
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (receiver != null){
+            unregisterReceiver(receiver);
+        }
+    }
+
 }

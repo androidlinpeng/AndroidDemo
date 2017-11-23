@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -17,10 +16,6 @@ public class PermissionActivity extends FragmentActivity implements ActivityComp
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_permission);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        PermissionsFragment fragment = new PermissionsFragment();
-        transaction.replace(R.id.content_fragment, fragment);
-        transaction.commit();
 
     }
 

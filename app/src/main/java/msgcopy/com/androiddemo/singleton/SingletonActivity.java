@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import msgcopy.com.androiddemo.R;
 
+
 public class SingletonActivity extends AppCompatActivity {
 
     @Override

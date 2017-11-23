@@ -37,6 +37,7 @@
         <service android:name=".MyService" />
         <service android:name=".msgpolling.PollingService" />
         <service android:name=".msgpolling.MsgService" />
+        <service android:name=".download.DownloadService"/>
 
         <activity android:name=".LimbActivity" />
         <activity android:name=".PermissionActivity" />
@@ -48,6 +49,7 @@
         <activity android:name=".ThreadPoolExecutorActivity" />
         <activity android:name=".network.DownLoadActivity" />
         <activity android:name=".singleton.SingletonActivity" />
+        <activity android:name=".download.DownloadActivity"></activity>
     </application>
 
 </manifest>
