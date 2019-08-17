@@ -20,7 +20,7 @@ public class AnimatorActivity extends AppCompatActivity {
     private ImageView liveAnimateList;
     private ImageView liveAnimate;
     private int ImageWidth = 150;
-    private int ImageHeight = 150;
+    private int minImageWidth = 50;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +33,20 @@ public class AnimatorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AnimationDrawable animationDrawable = (AnimationDrawable) getResources().getDrawable(R.drawable.live_animate);
-                liveAnimate.setImageDrawable(animationDrawable);
+                liveAnimateList.setImageDrawable(animationDrawable);
                 animationDrawable.start();
             }
         });
         liveAnimate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ImageView likeImg = new ImageView(AnimatorActivity.this);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(CommonUtil.dip2px(AnimatorActivity.this, minImageWidth), CommonUtil.dip2px(AnimatorActivity.this, minImageWidth));
+                params.topMargin = CommonUtil.getScreenHeight(AnimatorActivity.this) - CommonUtil.dip2px(AnimatorActivity.this, minImageWidth);
+                likeImg.setLayoutParams(params);
+                likeImg.setImageResource(R.drawable.live_animate_heart);
+                viewLayout.addView(likeImg);
+                startLiveAnimateStyleOne(likeImg);
             }
         });
         viewLayout.setOnTouchListener(new View.OnTouchListener() {
@@ -49,9 +55,9 @@ public class AnimatorActivity extends AppCompatActivity {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         ImageView likeImg = new ImageView(AnimatorActivity.this);
-                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(dip2px(ImageWidth), dip2px(ImageWidth));
-                        params.leftMargin = (int) event.getX() - dip2px(ImageWidth) / 2;
-                        params.topMargin = (int) event.getY() - dip2px(ImageWidth) / 2;
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(CommonUtil.dip2px(AnimatorActivity.this, ImageWidth), CommonUtil.dip2px(AnimatorActivity.this, ImageWidth));
+                        params.leftMargin = (int) event.getX() - CommonUtil.dip2px(AnimatorActivity.this, ImageWidth) / 2;
+                        params.topMargin = (int) event.getY() - CommonUtil.dip2px(AnimatorActivity.this, ImageWidth) / 2;
                         likeImg.setPadding(10, 10, 10, 10);
                         likeImg.setLayoutParams(params);
                         likeImg.setImageResource(R.drawable.live_animate_heart);
@@ -74,6 +80,44 @@ public class AnimatorActivity extends AppCompatActivity {
                         break;
                 }
                 return false;
+            }
+        });
+    }
+
+    /**
+     * 点赞烟花效果
+     *
+     * @param liveAnimate
+     */
+    private void startLiveAnimateStyleOne(final ImageView liveAnimate) {
+
+        int rotation = (int) (Math.random() * 15);
+        ObjectAnimator rotationAnimaotr = ObjectAnimator.ofFloat(liveAnimate, "rotation", 0, rotation, rotation * 2);
+
+        int translationX = (int) (Math.random() * 100);
+        int translationY = -CommonUtil.getScreenHeight(AnimatorActivity.this) / 2 + (int) (Math.random() * CommonUtil.getScreenHeight(AnimatorActivity.this) / 5);
+        ObjectAnimator translationXAnimaotr = ObjectAnimator.ofFloat(liveAnimate, "translationX", 0, CommonUtil.dip2px(AnimatorActivity.this, translationX));
+        ObjectAnimator translationYAnimaotr = ObjectAnimator.ofFloat(liveAnimate, "translationY", 0, translationY);
+
+        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(liveAnimate, "scaleX", 0.5f, 1f);
+        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(liveAnimate, "scaleY", 0.5f, 1f);
+
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(liveAnimate, "alpha", 1.0f, 1.0f, 1.0f, 0.8f);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(rotationAnimaotr, translationXAnimaotr, translationYAnimaotr, scaleXAnimator, scaleYAnimator, alphaAnimator);
+        animatorSet.setDuration(1000);
+        animatorSet.start();
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                viewLayout.removeView(liveAnimate);
             }
         });
     }
@@ -138,10 +182,5 @@ public class AnimatorActivity extends AppCompatActivity {
                 liveAnimate.setVisibility(View.GONE);
             }
         });
-    }
-
-    public int dip2px(float dpValue) {
-        final float scale = getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
     }
 }
