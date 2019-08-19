@@ -6,4 +6,15 @@
     <color name="limb_tap_page_idicator_text_color">#aba9a9</color>
     <color name="limb_tap_page_idicator_select_text_color">#6c6c6c</color>
     <color name="bg_activity_base">#ffffff</color>
+
+    <color name="color_live">#FF4A4A</color>
+    <color name="color_live_1">#4f378b</color>
+    <color name="color_live_2">#664ca6</color>
+    <color name="color_live_3">#2fcddc</color>
+    <color name="color_live_4">#57e6f4</color>
+    <color name="color_live_5">#f94f4f</color>
+    <color name="color_live_6">#3948a4</color>
+    <color name="color_live_7">#5263ce</color>
+    <color name="color_live_8">#f95c30</color>
+    <color name="color_live_9">#fc734c</color>
 </resources>

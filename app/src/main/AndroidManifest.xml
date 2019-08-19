@@ -30,9 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UpdateUIActivity" />
-        <activity android:name=".ByValueActivity" />
-        <activity android:name=".Main2Activity" />
 
         <service android:name=".MyService" />
         <service android:name=".msgpolling.PollingService" />
@@ -40,9 +37,7 @@
         <service android:name=".download.DownloadService" />
 
         <activity android:name=".LimbActivity" />
-        <activity android:name=".PermissionActivity" />
         <activity android:name=".SnackbarActivity" />
-        <activity android:name=".CustomRefreshListActivity" />
         <activity android:name=".msgpolling.MsgPollingActivity" />
         <activity android:name=".msgpolling.EventBusActivity" />
         <activity android:name=".observer.ObserverModeActivity" />

@@ -17,14 +17,23 @@
         android:id="@+id/live_animate_list"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/slide_play_bottom_like_anim_23"/>
+        android:src="@drawable/slide_play_bottom_like_anim_23" />
 
-    <ImageView
-        android:id="@+id/live_animate"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
+    <RelativeLayout
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/live_animate_heart"/>
+        android:layout_centerHorizontal="true"
+        android:clickable="true"
+        android:background="#306e6e6e">
+
+        <ImageView
+            android:id="@+id/live_animate"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:padding="15dp"
+            android:src="@mipmap/ic_details_like" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
